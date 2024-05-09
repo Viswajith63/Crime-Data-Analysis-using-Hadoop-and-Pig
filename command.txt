@@ -1,5 +1,5 @@
 Step 1 : 
-raw_data = LOAD 'D:\\vis\\data.csv' USING PigStorage(',') 
+raw_data = LOAD '<file location>\data.csv' USING PigStorage(',') 
     AS (
         States_UTs:chararray, 
         District:chararray, 
@@ -75,4 +75,4 @@ grouped_data = FOREACH (GROUP raw_data BY (States_UTs, District))
                    -- Add more attributes similarly for summing their values
                    SUM(raw_data.Arson) AS total_Arson;
 step 4 : 
-STORE grouped_data into 'D:\\vis\\output' USING PigStorage(',');
+STORE grouped_data into '<file location>\output' USING PigStorage(',');
