@@ -1,0 +1,78 @@
+Step 1 : 
+raw_data = LOAD 'D:\\vis\\data.csv' USING PigStorage(',') 
+    AS (
+        States_UTs:chararray, 
+        District:chararray, 
+        Year:int, 
+        Murder:int, 
+        Attempt_to_commit_Murder:int, 
+        Culpable_Homicide_not_amounting_to_Murder:int, 
+        Attempt_to_commit_Culpable_Homicide:int, 
+        Rape:int, 
+        Custodial_Rape:int, 
+        Custodial_Gang_Rape:int, 
+        Custodial_Other_Rape:int, 
+        Rape_other_than_Custodial:int, 
+        Rape_Gang_Rape:int, 
+        Rape_Others:int, 
+        Attempt_to_commit_Rape:int, 
+        Kidnapping_Abduction_Total:int, 
+        Kidnapping_Abduction:int, 
+        Kidnapping_Abduction_in_order_to_Murder:int, 
+        Kidnapping_for_Ransom:int, 
+        Kidnapping_Abduction_of_Women_to_compel_her_for_marriage:int, 
+        Other_Kidnapping:int, 
+        Dacoity:int, 
+        Dacoity_with_Murder:int, 
+        Other_Dacoity:int, 
+        Making_Preparation_and_Assembly_for_committing_Dacoity:int, 
+        Robbery:int, 
+        Criminal_Trespass_Burglary:int, 
+        Criminal_Trespass_or_Burglary:int, 
+        House_Trespass_House_Breaking:int, 
+        Theft:int, 
+        Auto_Theft:int, 
+        Other_Thefts:int, 
+        Unlawful_Assembly:int, 
+        Riots:int, 
+        Riots_Communal:int, 
+        Riots_Industrial:int, 
+        Riots_Political:int, 
+        Riots_Caste_Conflict:int, 
+        Riots_SC_STs_Vs_Non_SCs_STs:int, 
+        Riots_Other_Caste_Conflict:int, 
+        Riots_Agrarian:int, 
+        Riots_Students:int, 
+        Riots_Sectarian:int, 
+        Riots_Others:int, 
+        Criminal_Breach_of_Trust:int, 
+        Cheating:int, 
+        Forgery:int, 
+        Counterfeiting:int, 
+        Counterfeit_Offences_related_to_Counterfeit_Coin:int, 
+        Counterfeiting_Government_Stamp:int, 
+        Counterfeit_currency_Bank_notes:int, 
+        Counterfeiting_currency_notes_Bank_notes:int, 
+        Using_forged_or_counterfeiting_currency_Bank_notes:int, 
+        Possession_of_forged_or_counterfeiting_currency_Bank_notes:int, 
+        Making_or_Possessing_materials_for_forged_currency_Bank_notes:int, 
+        Making_or_Using_documents_resembling_currency:int, 
+        Arson:int
+    );
+step 2:
+ grouped_data = GROUP raw_data BY (States_UTs, District);
+
+step 3 : 
+grouped_data = FOREACH (GROUP raw_data BY (States_UTs, District)) 
+               GENERATE 
+                   group.States_UTs AS States_UTs, 
+                   group.District AS District, 
+                   SUM(raw_data.Murder) AS total_Murder, 
+                   SUM(raw_data.Attempt_to_commit_Murder) AS total_Attempt_to_commit_Murder, 
+                   SUM(raw_data.Culpable_Homicide_not_amounting_to_Murder) AS total_Culpable_Homicide_not_amounting_to_Murder, 
+                   SUM(raw_data.Attempt_to_commit_Culpable_Homicide) AS total_Attempt_to_commit_Culpable_Homicide, 
+                   SUM(raw_data.Rape) AS total_Rape, 
+                   -- Add more attributes similarly for summing their values
+                   SUM(raw_data.Arson) AS total_Arson;
+step 4 : 
+STORE grouped_data into 'D:\\vis\\output' USING PigStorage(',');
